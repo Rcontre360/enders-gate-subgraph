@@ -1,0 +1,11 @@
+{
+  "name": "mainnet",
+  "startBlock": 5800474,
+  "endersGate": "0x6C8E17CCC40acf0ea83eA86dd42c732FEe0bB1e4",
+  "endersGateBlock": 22934795,
+  "exchange": "0xec729958a6c3d994a64692Ae7e7B58eB577f8a6D",
+  "pack": "0x1d6985ff624475719e29133D72ea6Bf7614F957A",
+  "packsBlock": 22935113,
+  "clockSale": "0xa84bdEe314199A0b9169684B815456EF99032614",
+  "clockSaleOwnable": "0x777292402a3a8cA33F5a16a4395c4c7604509E2b"
+}

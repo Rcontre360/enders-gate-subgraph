@@ -1,0 +1,60 @@
+specVersion: 0.0.2
+description: eip1155
+repository: https://github.com/sunguru98/eip-1155-subgraph
+schema:
+  file: ./src/schema.gql
+dataSources:
+  - kind: ethereum/contract
+    name: EndersGate
+    network: {{name}}
+    source:
+      abi: EndersGate
+      startBlock: {{endersGateBlock}}
+      address: '{{endersGate}}'
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+      abis:
+        - name: EndersGate
+          file: ./abis/EndersGate.json
+      eventHandlers:
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: URI(string,indexed uint256)
+          handler: handleURI
+      file: ./src/index.ts
+  - kind: ethereum/contract
+    name: Packs
+    network: {{name}}
+    source:
+      abi: Packs
+      startBlock: {{packsBlock}}
+      address: '{{pack}}'
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.4
+      language: wasm/assemblyscript
+      entities:
+        - Token
+      abis:
+        - name: Packs
+          file: ./abis/Packs.json
+      eventHandlers:
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+        - event: URI(string,indexed uint256)
+          handler: handleURI
+        - event: LootBoxOpened(indexed uint256,indexed address,uint256,uint256)
+          handler: handleBoxOpened
+      file: ./src/index.ts
