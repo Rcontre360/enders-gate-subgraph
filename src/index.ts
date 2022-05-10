@@ -1,12 +1,6 @@
-import {ethereum, BigInt} from '@graphprotocol/graph-ts';
-
-import {
-  Account,
-  TokenRegistry,
-  Token,
-  Balance,
-  Transfer,
-} from '../generated/schema';
+import {ethereum, BigInt} from "@graphprotocol/graph-ts";
+import {log} from "@graphprotocol/graph-ts";
+import {Account, TokenRegistry, Token, Balance, Transfer, Unpack} from "../generated/schema";
 
 import {
   TransferBatch as TransferBatchEvent,
@@ -14,27 +8,13 @@ import {
   URI as URIEvent,
   ApprovalForAll as ApprovalForAllEvent,
   LootBoxOpened as LootBoxOpenedEvent,
-} from '../generated/IERC1155/IERC1155';
+} from "../generated/Packs/Packs";
 
-import {IERC1155MetadataURI} from '../generated/IERC1155/IERC1155MetadataURI';
-
-import {
-  constants,
-  events,
-  integers,
-  transactions,
-} from '@amxx/graphprotocol-utils';
-
-function replaceAll(input: string, search: string[], replace: string): string {
-  let result = '';
-  for (let i = 0; i < input.length; i++) {
-    result += search.includes(input.charAt(i)) ? replace : input.charAt(i);
-  }
-  return result;
-}
+import {constants, events, integers, transactions} from "@amxx/graphprotocol-utils";
+import {Packs} from "../generated/Packs/Packs"; //its also erc1155 compilant
 
 function fetchToken(registry: TokenRegistry, id: BigInt): Token {
-  let tokenid = registry.id.concat('-').concat(id.toHex());
+  let tokenid = registry.id.concat("-").concat(id.toHex());
   let token = Token.load(tokenid);
   if (token == null) {
     token = new Token(tokenid);
@@ -46,7 +26,7 @@ function fetchToken(registry: TokenRegistry, id: BigInt): Token {
 }
 
 function fetchBalance(token: Token, account: Account): Balance {
-  let balanceid = token.id.concat('-').concat(account.id);
+  let balanceid = token.id.concat("-").concat(account.id);
   let balance = Balance.load(balanceid);
   if (balance == null) {
     balance = new Balance(balanceid);
@@ -68,7 +48,7 @@ function registerTransfer(
   value: BigInt
 ): void {
   let token = fetchToken(registry, id);
-  let contract = IERC1155MetadataURI.bind(event.address);
+  let contract = Packs.bind(event.address);
   let ev = new Transfer(events.id(event).concat(suffix));
 
   ev.transaction = transactions.log(event).id;
@@ -97,13 +77,7 @@ function registerTransfer(
     ev.toBalance = balance.id;
   }
 
-  //let callResult = contract.try_uri(id);
-  //if (!callResult.reverted) {
-  //token.URI = callResult.value;
-  //}
-
-  //let nameResult = contract.try_name();
-  //let symbolResult = contract.try_symbol();
+  token.URI = contract.uri(id);
 
   token.save();
   ev.save();
@@ -125,16 +99,7 @@ export function handleTransferSingle(event: TransferSingleEvent): void {
   from.save();
   to.save();
 
-  registerTransfer(
-    event,
-    '',
-    registry,
-    operator,
-    from,
-    to,
-    event.params.id,
-    event.params.value
-  );
+  registerTransfer(event, "", registry, operator, from, to, event.params.id, event.params.value);
 }
 
 export function handleTransferBatch(event: TransferBatchEvent): void {
@@ -152,7 +117,7 @@ export function handleTransferBatch(event: TransferBatchEvent): void {
   for (let i = 0; i < ids.length; ++i) {
     registerTransfer(
       event,
-      '-'.concat(i.toString()),
+      "-".concat(i.toString()),
       registry,
       operator,
       from,
@@ -173,10 +138,15 @@ export function handleURI(event: URIEvent): void {
 }
 
 export function handleBoxOpened(event: LootBoxOpenedEvent): void {
-  let registry = new TokenRegistry(event.address.toHex());
-  registry.save();
+  const buyer = new Account(event.params.buyer.toHex());
+  const amountMinted = event.params.itemsMinted;
+  const allEvents = transactions.log(event).events;
+  log.info("EVENTS from transaction.lgo", allEvents);
 
-  let token = fetchToken(registry, event.params.id);
-  token.URI = event.params.value;
-  token.save();
+  const unpack = new Unpack(events.id(event));
+  unpack.transaction = transactions.log(event).id;
+  unpack.timestamp = event.block.timestamp;
+  unpack.account = buyer.id;
+  unpack.amount = amountMinted;
+  unpack.save();
 }
