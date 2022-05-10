@@ -1,0 +1,8 @@
+{
+  "name": "mainnet",
+  "endersGate": "0xF07e3ca5479F138d60ec04979603B7946602fcd8",
+  "endersGateBlock": 10649238,
+  "exchange": "0xCB9946E37e26EA1dD72a575eb1f986090A196C85",
+  "pack": "0xc146Aca3b73c8b37b89e38F57E59CfE5220f0a68",
+  "packsBlock": 10649319
+}
