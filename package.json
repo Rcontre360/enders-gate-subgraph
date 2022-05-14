@@ -11,6 +11,7 @@
     "build:all": "yarn build:codegen && yarn build:compile",
     "prepare:harmony_test": "mustache config/harmony_test.json subgraph.template.yaml > subgraph.yaml",
     "prepare:harmony": "mustache config/harmony.json subgraph.template.yaml > subgraph.yaml",
+    "deploy:harmony": "yarn prepare:harmony && yarn build:all && graph deploy --debug --node http://localhost:8020/ --ipfs http://127.0.0.1:5001 Rcontre360/endersGate_harmony",
     "deploy:harmony_test": "yarn prepare:harmony_test && yarn build:all && graph deploy --debug --node http://localhost:8020/ --ipfs http://127.0.0.1:5001 Rcontre360/endersGate_harmony_test",
     "prepare:rinkeby": "mustache config/rinkeby.json subgraph.template.yaml > subgraph.yaml",
     "deploy:rinkeby": "yarn prepare:rinkeby && yarn build:all && graph deploy --debug --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ Rcontre360/rinkeby-enders-subgraph",

@@ -1,10 +1,15 @@
 {
   "name": "mainnet",
-  "startBlock": 5800474,
+  "endersGateBlock": 25855600,
   "endersGate": "0xAd6f94bDefB6D5ae941392Da5224ED083AE33adc",
   "exchange": "0x5D6DCd1aA88E2b5442Bd46d8f9f351B2127eE049",
   "ipfs": "https://ipfs.moralis.io:2053/ipfs/QmXWojzVzRo2NERK3LtrscCXwJ5CrZ8xbnchTgWnTyLDvw",
   "pack": "0xb90Dc9e354001e6260DE670EDD6aBaDb890C6aC9",
+  "packsBlock": 25855832,
   "packIpfs": "https://ipfs.moralis.io:2053/ipfs/QmQA1DNdx4dwjQEJueSUfHAcYzyuaUs8rQhrjLqgLgYnyj",
-  "library": "0xEf626C48cBB613F985F32c00d1A521a1Ff765F76"
+  "library": "0xEf626C48cBB613F985F32c00d1A521a1Ff765F76",
+  "dracul": "0x51BE175Fa7A56B98BCFFA124D6Bd31480b093214",
+  "draculBlock": 20134054,
+  "eross": "0xE1C04284652be3771D514e5f05F823b35075D70F",
+  "erossBlock": 21013637
 }
